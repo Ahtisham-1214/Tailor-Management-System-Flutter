@@ -37,10 +37,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -97,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
           _loginMessage = 'An error occurred: $e';
           _messageColor = Colors.red;
         });
-        print("Error during login: $e");
       }
     }
   }
