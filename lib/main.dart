@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'user_repository.dart';
 import 'database_helper.dart';
-import 'user.dart';
+import 'register_page.dart';
+import 'home_screen.dart';
+
 
 
 
@@ -50,25 +52,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _addInitialUsers();
   }
 
-  Future<void> _addInitialUsers() async {
-    // try {
-      // final existingUser = await _userRepository.getUserByUsername('testuser');
-      // if (existingUser == null) {
-      //   await _userRepository.insertUser(User(userName: 'testuser', password: 'password123'));
-      //   print('Added testuser');
-      // }
-      // final existingAdmin = await _userRepository.getUserByUsername('admin');
-      // if (existingAdmin == null) {
-      //   await _userRepository.insertUser(User(userName: 'ahtisham', password: '123'));
-      //   print('Added admin');
-      // }
-    // } catch (e) {
-    //   print('Error adding initial users: $e');
-    // }
-  }
 
   @override
   void dispose() {
@@ -84,6 +69,9 @@ class _LoginPageState extends State<LoginPage> {
 
       try {
         bool isValid = await _userRepository.validateUser(username, password);
+
+        if (!mounted) return; // ✅ Ensure widget is still in tree
+
         if (isValid) {
           setState(() {
             _loginMessage = 'Login Successful!';
@@ -94,10 +82,10 @@ class _LoginPageState extends State<LoginPage> {
           _passwordController.clear();
           //  Navigate to the home screen or next screen after successful login.
           //  For example:
-          //  Navigator.pushReplacement(
-          //    context,
-          //    MaterialPageRoute(builder: (context) => HomeScreen()),
-          //  );
+           Navigator.pushReplacement(
+             context,
+             MaterialPageRoute(builder: (context) => HomeScreen()),
+           );
         } else {
           setState(() {
             _loginMessage = 'Invalid username or password.';
@@ -197,6 +185,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 child: const Text('Login', style: TextStyle(fontSize: 18.0)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                  );
+                },
+                child: const Text('Don\'t have an account? Register here'),
               ),
             ],
           ),
