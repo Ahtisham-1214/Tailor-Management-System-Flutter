@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'user_repository.dart';
-import 'database_helper.dart';
-import 'register_page.dart';
+import 'model/user_repository.dart';
+import 'model/database_helper.dart';
+import 'register_screen.dart';
 import 'home_screen.dart';
 
 

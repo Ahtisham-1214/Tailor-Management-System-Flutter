@@ -98,6 +98,27 @@ class CustomerScreenState extends State<CustomerScreen> {
                 },
               ),
               const SizedBox(height: 30.0),
+              TextFormField(
+                controller: _phoneNumberController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  prefixIcon: const Icon(Icons.phone),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter Customer Phone Number';
+                  }else if(!RegExp(r"^\d{11}$").hasMatch(value)){
+                    return 'Customer Number must contains only 11 digits';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: _validateCustomer,
                 style: ElevatedButton.styleFrom(
