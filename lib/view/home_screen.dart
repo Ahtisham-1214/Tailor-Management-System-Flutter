@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tailor_management/customer_screen.dart';
-import 'package:tailor_management/shop_detail_screen.dart';
+import 'package:tailor_management/view/customer_screen.dart';
+import 'package:tailor_management/view/shop_detail_screen.dart';
 import 'main.dart';
 import 'prices_screen.dart';
 

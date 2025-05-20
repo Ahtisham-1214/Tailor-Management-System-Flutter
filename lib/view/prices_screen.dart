@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'model/prices.dart';
+import '../model/prices.dart';
 
 class PriceScreen extends StatefulWidget {
   const PriceScreen({super.key});
