@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tailor_management/customer_screen.dart';
+import 'package:tailor_management/shop_detail_screen.dart';
 import 'main.dart';
 import 'prices_screen.dart';
 
@@ -38,6 +39,14 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const PriceScreen()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('Shop Details'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ShopDetailScreen()));
               },
             ),
             ListTile(
