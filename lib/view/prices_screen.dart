@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/prices.dart';
+import '../model/prices_repository.dart';
 
 class PriceScreen extends StatefulWidget {
   const PriceScreen({super.key});
@@ -13,50 +14,65 @@ class PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _kameezShalwaarController = TextEditingController();
   final _shirtController = TextEditingController();
+  final PriceRepository _priceRepository = PriceRepository();
   String? _message;
   Color _messageColor = Colors.red;
 
   @override
   void initState() {
     super.initState();
+    _getPrice();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _kameezShalwaarController.dispose();
+    _shirtController.dispose();
   }
 
-  Future<void> _validatePrice() async {
+  Future<void> _savePrice() async {
     if (_formKey.currentState!.validate()) {
       String kameezShalwaar = _kameezShalwaarController.text;
       String shirt = _shirtController.text;
       try {
-        if (!RegExp(r"^\d+(\.\d+)?$").hasMatch(kameezShalwaar)) {
-          setState(() {
-            _message = 'Kameez Shalwaar Price must contains only numbers';
-            _messageColor = Colors.red;
-          });
-        } else if (!RegExp(r"^\d+(\.\d+)?$").hasMatch(shirt)) {
-          setState(() {
-            _message = 'Shirt Price must contains only numbers';
-            _messageColor = Colors.red;
-          });
-        } else {
           Price price = Price(
             kameezShalwaar: double.parse(kameezShalwaar),
             shirt: double.parse(shirt),
           );
           setState(() {
+            _priceRepository.setPrice(price);
             _message = 'Price Set Successfully';
             _messageColor = Colors.green;
           });
-        }
       } catch (e) {
         setState(() {
           _message = 'An error occurred: $e';
           _messageColor = Colors.red;
         });
       }
+    }
+  }
+
+  Future<void> _getPrice() async {
+    try {
+      Price? price = await _priceRepository.getPrice();
+      if (price != null) {
+        setState(() {
+          _kameezShalwaarController.text = price.kameezShalwaarPrice.toString();
+          _shirtController.text = price.shirtPrice.toString();
+        });
+      }else{
+        setState(() {
+          _message = 'No Price Found';
+          _messageColor = Colors.red;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _message = 'An error occurred: $e';
+        _messageColor = Colors.red;
+      });
     }
   }
 
@@ -97,7 +113,7 @@ class PriceScreenState extends State<PriceScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Enter Kameez Shalwaar Price';
                   } else if (!RegExp(r"^\d+(\.\d+)?$").hasMatch(value)) {
-                    return 'Kameez Shalwaar Price must contains only numbers';
+                    return 'Invalid Kameez Shalwaar Price';
                   }
                   return null;
                 },
@@ -118,14 +134,14 @@ class PriceScreenState extends State<PriceScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Enter Shirt Price';
                   } else if (!RegExp(r"^\d+(\.\d+)?$").hasMatch(value)) {
-                    return 'Shirt Price must contains only numbers';
+                    return 'Invalid Shirt Price';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 30.0),
               ElevatedButton(
-                onPressed: _validatePrice,
+                onPressed: _savePrice,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   shape: RoundedRectangleBorder(
