@@ -53,6 +53,16 @@ class DatabaseHelper {
         shirt REAL NOT NULL
      )
   ''');
+
+    await db.execute('''
+      CREATE TABLE shopDetails(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        shopName TEXT NOT NULL,
+        mail TEXT NOT NULL,
+        phoneNumber TEXT NOT NULL,
+        address TEXT NOT NULL
+      )
+    ''');
   }
 
   // Handle database upgrades (e.g., adding new columns)
@@ -65,7 +75,18 @@ class DatabaseHelper {
         shirt REAL NOT NULL
       )
   ''');
+
+      await db.execute('''
+      CREATE TABLE IF NOT EXISTS shopDetails(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        shopName TEXT NOT NULL,
+        mail TEXT NOT NULL,
+        phoneNumber TEXT NOT NULL,
+        address TEXT NOT NULL
+        )
+      ''');
     }
+
   }
 
   // Close the database (optional, often not strictly necessary for app lifecycle)
