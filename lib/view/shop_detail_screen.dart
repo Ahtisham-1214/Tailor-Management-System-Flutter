@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:tailor_management/model/shop_details_repository.dart';
+import 'package:tailor_management/model/shop_details.dart';
 class ShopDetailScreen extends StatefulWidget {
   const ShopDetailScreen({super.key});
 
@@ -15,44 +16,74 @@ class ShopDetailScreenState extends State<ShopDetailScreen> {
   final _shopEmailController = TextEditingController();
   String? _message;
   Color _messageColor = Colors.red;
+  final ShopDetailsRepository _shopDetailsRepository = ShopDetailsRepository();
 
   @override
   void initState() {
     super.initState();
+    _fetchShopDetails();
   }
 
   @override
   void dispose() {
     super.dispose();
+    _shopNameController.dispose();
+    _shopAddressController.dispose();
+    _shopPhoneController.dispose();
+    _shopEmailController.dispose();
   }
 
-  Future<void> _validateShopDetails() async {
+  Future<void> _fetchShopDetails() async {
+    try {
+      final shopDetail = await _shopDetailsRepository.getShopDetails();
+      if (shopDetail != null) {
+        setState(() {
+          _shopNameController.text = shopDetail.shopName;
+          _shopAddressController.text = shopDetail.address;
+          _shopPhoneController.text = shopDetail.phoneNumber;
+          _shopEmailController.text = shopDetail.mail;
+        });
+        }else{
+          setState(() {
+            _message = 'No Shop Details Found';
+            _messageColor = Colors.red;
+          });
+        }
+      }
+      catch(e){
+      setState(() {
+        _message = 'Error fetching shop details: $e';
+        _messageColor = Colors.red;
+      });
+      }
+  }
+  Future<void> _saveShopDetails() async {
     if (_formKey.currentState!.validate()) {
-      if (_shopNameController.text.trim().isEmpty) {
-        setState(() {
-          _message = 'Enter Shop Name';
-          _messageColor = Colors.red;
-        });
-      } else if (_shopAddressController.text.trim().isEmpty) {
-        setState(() {
-          _message = 'Enter Shop Address';
-          _messageColor = Colors.red;
-        });
-      } else if (_shopPhoneController.text.trim().isEmpty) {
-        setState(() {
-          _message = 'Enter Shop Phone Number';
-          _messageColor = Colors.red;
-        });
-      } else if (_shopEmailController.text.trim().isEmpty) {
-        setState(() {
-          _message = 'Enter Shop Email';
-          _messageColor = Colors.red;
-        });
-      } else {
+      String shopName = _shopNameController.text;
+      String shopAddress = _shopAddressController.text;
+      String shopPhone = _shopPhoneController.text;
+      String shopEmail = _shopEmailController.text;
+
+      try{
+        final shopDetail = ShopDetail(
+          shopName: shopName,
+          address: shopAddress,
+          phoneNumber: shopPhone,
+          mail: shopEmail,
+        );
+        _shopDetailsRepository.setShopDetails(shopDetail);
+
         setState(() {
           _message = 'Shop Details Set Successfully';
           _messageColor = Colors.green;
         });
+
+      }catch(e){
+        setState(() {
+          _message = 'Error saving shop details: $e';
+          _messageColor = Colors.red;
+        });
+
       }
     }
   }
@@ -165,7 +196,7 @@ class ShopDetailScreenState extends State<ShopDetailScreen> {
               const SizedBox(height: 30.0),
 
               ElevatedButton(
-                onPressed: _validateShopDetails,
+                onPressed: _saveShopDetails,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
                   shape: RoundedRectangleBorder(
