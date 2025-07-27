@@ -14,7 +14,11 @@ class CustomerScreenState extends State<CustomerScreen> {
 
   final _customerNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-  final _addressController = TextEditingController();
+  final _shoulderController = TextEditingController();
+  final _neckController = TextEditingController();
+  final _chestController = TextEditingController();
+  final _sleevesLengthController = TextEditingController();
+  final _kameezLengthController = TextEditingController();
 
   String? _message;
   Color _messageColor = Colors.red;
@@ -39,7 +43,11 @@ class CustomerScreenState extends State<CustomerScreen> {
   void dispose() {
     _customerNameController.dispose();
     _phoneNumberController.dispose();
-    _addressController.dispose();
+    _shoulderController.dispose();
+    _neckController.dispose();
+    _chestController.dispose();
+    _sleevesLengthController.dispose();
+    _kameezLengthController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -53,7 +61,8 @@ class CustomerScreenState extends State<CustomerScreen> {
     }
   }
 
-  void _previousPage() { // Added back for manual backward swipe
+  void _previousPage() {
+    // Added back for manual backward swipe
     if (_currentPage > 0) {
       _pageController.previousPage(
         duration: const Duration(milliseconds: 400),
@@ -92,7 +101,7 @@ class CustomerScreenState extends State<CustomerScreen> {
         print('Customer Data Submitted:');
         print('Name: ${_customerNameController.text}');
         print('Phone: ${_phoneNumberController.text}');
-        print('Address: ${_addressController.text}');
+        print('Shoulder: ${_shoulderController.text}');
       }
     } else {
       setState(() {
@@ -115,20 +124,14 @@ class CustomerScreenState extends State<CustomerScreen> {
           Positioned(
             left: 18,
             right: 18,
-            child: Container(
-              height: 2.0,
-              color: Colors.grey,
-            ),
+            child: Container(height: 2.0, color: Colors.grey),
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeOut,
             left: 18,
             width: activeLineWidth,
-            child: Container(
-              height: 2.0,
-              color: Colors.blue,
-            ),
+            child: Container(height: 2.0, color: Colors.blue),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +149,8 @@ class CustomerScreenState extends State<CustomerScreen> {
                 },
                 child: CircleAvatar(
                   radius: 18,
-                  backgroundColor: isActiveOrCompleted ? Colors.blue : Colors.grey[400],
+                  backgroundColor:
+                      isActiveOrCompleted ? Colors.blue : Colors.grey[400],
                   child: Text(
                     '${index + 1}',
                     style: TextStyle(
@@ -166,6 +170,7 @@ class CustomerScreenState extends State<CustomerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: const Text('Customer Screen'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -200,89 +205,269 @@ class CustomerScreenState extends State<CustomerScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   children: <Widget>[
                     // --- Step 1: Customer Name ---
-                    Form(
-                      key: _formKey1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextFormField(
-                            controller: _customerNameController,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              labelText: 'Customer Name',
-                              prefixIcon: const Icon(Icons.person_outline),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            validator: (value) {
-                              final String? trimmedValue = value?.trim(); // Trimming happens first
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: _formKey1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TextFormField(
+                                controller: _customerNameController,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                  labelText: 'Customer Name',
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  final String? trimmedValue =
+                                      value?.trim(); // Trimming happens first
 
-                              if (trimmedValue == null || trimmedValue.isEmpty) {
-                                return 'Enter Customer Name';
-                              } else if (!RegExp(r"^[A-Za-z]+([ ]?[A-Za-z]+)*$").hasMatch(trimmedValue)) {
-                                // Original regex is fine here because input is already trimmed
-                                return 'Customer Name must contain only alphabets and single spaces between words';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 30.0),
-                          ElevatedButton(
-                            onPressed: () => _validateStep(0),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                                  if (trimmedValue == null ||
+                                      trimmedValue.isEmpty) {
+                                    return 'Enter Customer Name';
+                                  } else if (!RegExp(
+                                    r"^[A-Za-z]+([ ]?[A-Za-z]+)*$",
+                                  ).hasMatch(trimmedValue)) {
+                                    // Original regex is fine here because input is already trimmed
+                                    return 'Customer Name must contain only alphabets and single spaces between words';
+                                  }
+                                  return null;
+                                },
                               ),
-                            ),
-                            child: const Text('Next', style: TextStyle(fontSize: 18.0)),
+                              const SizedBox(height: 30.0),
+                              TextFormField(
+                                controller: _phoneNumberController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Phone Number',
+                                  prefixIcon: const Icon(Icons.phone),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Enter Customer Phone Number';
+                                  } else if (!RegExp(
+                                    r"^\d{11}$",
+                                  ).hasMatch(value)) {
+                                    return 'Customer Number must contain only 11 digits';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 30.0),
+                              ElevatedButton(
+                                onPressed: () => _validateStep(0),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Next',
+                                  style: TextStyle(fontSize: 18.0),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     // --- Step 2: Phone Number ---
-                    Form(
-                      key: _formKey2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextFormField(
-                            controller: _phoneNumberController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              prefixIcon: const Icon(Icons.phone),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: _formKey2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _shoulderController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Shoulder',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Shoulder size';
+                                        } else if (double.tryParse(value) ==
+                                                null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _neckController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Neck',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Neck size';
+                                        } else if (double.tryParse(value) ==
+                                                null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Enter Customer Phone Number';
-                              } else if (!RegExp(r"^\d{11}$").hasMatch(value)) {
-                                return 'Customer Number must contain only 11 digits';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 30.0),
-                          ElevatedButton(
-                            onPressed: () => _validateStep(1),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _chestController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Chest',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Chest size';
+                                        } else if (double.tryParse(value) ==
+                                                null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _sleevesLengthController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Sleeves Length',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Sleeves Length';
+                                        } else if (double.tryParse(value) ==
+                                                null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            child: const Text('Next', style: TextStyle(fontSize: 18.0)),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _kameezLengthController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Kameez Length',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Kameez Length';
+                                        } else if (double.tryParse(value) ==
+                                                null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16.0),
+                                  const Expanded(
+                                    child:
+                                        SizedBox(), // Empty slot to keep layout balanced (optional)
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 30.0),
+                              ElevatedButton(
+                                onPressed: () => _validateStep(1),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Next',
+                                  style: TextStyle(fontSize: 18.0),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    // --- Step 3: Address (New Step) ---
                     Form(
                       key: _formKey3,
                       child: Column(
@@ -290,8 +475,8 @@ class CustomerScreenState extends State<CustomerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TextFormField(
-                            controller: _addressController,
-                            keyboardType: TextInputType.streetAddress,
+                            controller: _shoulderController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               labelText: 'Customer Address',
                               prefixIcon: const Icon(Icons.home),
@@ -310,12 +495,17 @@ class CustomerScreenState extends State<CustomerScreen> {
                           ElevatedButton(
                             onPressed: () => _validateStep(2),
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12.0,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
-                            child: const Text('Confirm Order', style: TextStyle(fontSize: 18.0)),
+                            child: const Text(
+                              'Confirm Order',
+                              style: TextStyle(fontSize: 18.0),
+                            ),
                           ),
                         ],
                       ),
