@@ -19,6 +19,16 @@ class CustomerScreenState extends State<CustomerScreen> {
   final _chestController = TextEditingController();
   final _sleevesLengthController = TextEditingController();
   final _kameezLengthController = TextEditingController();
+  final _shalwaarLengthController = TextEditingController();
+  final List<String> _collarTypes = ['Sherwani', 'Cooper',  'French', 'Classic', 'No Collar'];
+  String? _selectedCollar;
+  final List<String> _cuffTypes = ['Square', 'Round', 'No Cuff'];
+  String? _selectedCuff;
+  final List<String> _kameezTypes = ['Square', 'Round'];
+  String? _selectedKameez;
+  final List<String> _shalwaarTypes = ['Shalwaar', 'Pajama', 'Patiala'];
+  String? _selectedShalwaar;
+
 
   String? _message;
   Color _messageColor = Colors.red;
@@ -440,11 +450,163 @@ class CustomerScreenState extends State<CustomerScreen> {
                                       },
                                     ),
                                   ),
-                                  const SizedBox(width: 16.0),
-                                  const Expanded(
-                                    child:
-                                        SizedBox(), // Empty slot to keep layout balanced (optional)
+                                  const SizedBox(width: 16.0,),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _shalwaarLengthController,
+                                      keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Shalwaar Length',
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10.0,
+                                          ),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Enter Shalwaar Length';
+                                        } else if (double.tryParse(value) ==
+                                            null ||
+                                            double.parse(value) < 1) {
+                                          return 'Invalid Shalwaar size';
+                                        }
+                                        return null;
+                                      },
+                                    ),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedShalwaar, // The currently selected value
+                                      decoration: const InputDecoration(
+                                        labelText: 'Shalwaar Type',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      hint: const Text('Shalwaar Type'), // Placeholder text
+                                      items: _shalwaarTypes.map((String role) {
+                                        return DropdownMenuItem<String>(
+                                          value: role,
+                                          child: Text(role),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedShalwaar = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a Shalwaar Type';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedKameez, // The currently selected value
+                                      decoration: const InputDecoration(
+                                        labelText: 'Kameez Types',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      hint: const Text('Kameez Type'), // Placeholder text
+                                      items: _kameezTypes.map((String role) {
+                                        return DropdownMenuItem<String>(
+                                          value: role,
+                                          child: Text(role),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedKameez = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a Kameez Type';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedCuff, // The currently selected value
+                                      decoration: const InputDecoration(
+                                        labelText: 'Cuff Types',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      hint: const Text('Select a Cuff'), // Placeholder text
+                                      items: _cuffTypes.map((String role) {
+                                        return DropdownMenuItem<String>(
+                                          value: role,
+                                          child: Text(role),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedCuff = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a Cuff Type';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16.0,),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedCollar, // The currently selected value
+                                      decoration: const InputDecoration(
+                                        labelText: 'Collar Types',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      hint: const Text('Select a Collar'), // Placeholder text
+                                      items: _collarTypes.map((String role) {
+                                        return DropdownMenuItem<String>(
+                                          value: role,
+                                          child: Text(role),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedCollar = newValue;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a Collar Type';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
                                 ],
                               ),
                               const SizedBox(height: 30.0),
